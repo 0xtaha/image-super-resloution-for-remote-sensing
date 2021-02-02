@@ -18,7 +18,7 @@ def pixalate_image(image, scale_percent = 40):
     low_res_image = cv2.resize(small_image, dim, interpolation =  cv2.INTER_AREA)
     return low_res_image
 
-
+## Progress bar is to be added
 def Data_Preprocessing(Datapath , Preprocessed_Data_Path):
     
     for root, dirnames, filenames in os.walk(Datapath): # generate the files names
