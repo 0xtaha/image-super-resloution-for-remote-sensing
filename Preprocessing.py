@@ -1,16 +1,27 @@
 import os
 import re
-from skimage.transform import resize, rescale
+from skimage.transform import resize
 from matplotlib import pyplot
 import numpy as np
 import cv2
 
+def pixalate_image(image, scale_percent = 40):
 
-
-
-def Data_Preprocessing(path , just_load_dataset=False):
+    w,h,_ = image.shape
+    width = int(w * scale_percent / 100)
+    height = int(h * scale_percent / 100)
+    dim = (width, height)
+    small_image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
     
-    for root, dirnames, filenames in os.walk(path): # generate the files names
+    # scale back to original size
+    dim = (w,h)
+    low_res_image = cv2.resize(small_image, dim, interpolation =  cv2.INTER_AREA)
+    return low_res_image
+
+
+def Data_Preprocessing(Datapath , Preprocessed_Data_Path):
+    
+    for root, dirnames, filenames in os.walk(Datapath): # generate the files names
         for filename in filenames:
             if re.search("\.(jpg|jpeg|JPEG|png|bmp|tiff|tif)$", filename):
                 
@@ -21,6 +32,8 @@ def Data_Preprocessing(path , just_load_dataset=False):
                     HighRes = resize(image, (256, 256))
                     # Add this image to the high res dataset
                     # Rescale it 0.5x and 2x so that it is a low res image but still has 256x256 resolution
-                    # define new method of preprocessing
-                    #LowRes = 
+                    LowRes = pixalate_image(HighRes)
+                    np.save(os.path.join(Preprocessed_Data_Path, filename + '.npy'), HighRes)
+                    np.save(os.path.join(Preprocessed_Data_Path, filename + '.npy'), LowRes)  
+    print('Done ... ')      
                     
