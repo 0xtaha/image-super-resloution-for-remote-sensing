@@ -4,6 +4,8 @@ from skimage.transform import resize
 from matplotlib import pyplot
 import numpy as np
 import cv2
+from tqdm.notebook import tqdm, trange
+
 
 def pixalate_image(image, scale_percent = 40):
 
@@ -19,21 +21,19 @@ def pixalate_image(image, scale_percent = 40):
     return low_res_image
 
 ## Progress bar is to be added
-def Data_Preprocessing(Datapath , Preprocessed_Data_Path):
-    
-    for root, dirnames, filenames in os.walk(Datapath): # generate the files names
-        for filename in filenames:
-            if re.search("\.(jpg|jpeg|JPEG|png|bmp|tiff|tif)$", filename):
-                
-                filepath = os.path.join(root, filename)
-                image = pyplot.imread(filepath) # read the image file and save into an array
-                if len(image.shape) > 2:
-                    # Resize the image so that every image is the same size
-                    HighRes = resize(image, (256, 256))
-                    # Add this image to the high res dataset
-                    # Rescale it 0.5x and 2x so that it is a low res image but still has 256x256 resolution
-                    LowRes = pixalate_image(HighRes)
-                    np.save(os.path.join(Preprocessed_Data_Path, filename + '.npy'), HighRes)
-                    np.save(os.path.join(Preprocessed_Data_Path, filename + '.npy'), LowRes)  
-    print('Done ... ')      
-                    
+def Data_Preprocessing(images_list ,path, Preprocessed_Data_Path):
+    progress = tqdm(total= len(images_list), position=0)
+    for filepath in images_list:
+        filename , ext = filepath.split('/')[-1].split('.')
+        image = pyplot.imread(filepath) # read the image file and save into an array
+        if len(image.shape) > 2:
+          # Resize the image so that every image is the same size
+          HighRes = resize(image, (256, 256))
+          # Add this image to the high res dataset
+          # Rescale it 0.5x and 2x so that it is a low res image but still has 256x256 resolution
+          LowRes = pixalate_image(HighRes)
+          np.save(os.path.join(Preprocessed_Data_Path, path+'_y', filename + '.npy'), HighRes)
+          np.save(os.path.join(Preprocessed_Data_Path, path+'_x',filename + '.npy'), LowRes)
+          os.remove(filepath)
+          progress.update(1)
+    print('Done ... ')                          
