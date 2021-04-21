@@ -5,7 +5,8 @@ from layer import *
 from vgg19 import VGG19
 
 class SRGAN:
-    def __init__(self, x, is_training, batch_size):
+    def __init__(self, x, is_training, batch_size , image_size):
+        self.image_size = image_size
         self.batch_size = batch_size
         self.vgg = VGG19(None, None, None)
         self.downscaled = self.downscale(x)
@@ -16,7 +17,6 @@ class SRGAN:
 
         self.g_loss, self.d_loss= self.inference_losses(
             x, self.base_sr, self.imitation_sr,  self.real_output, self.fake_output)
-    image_size =  24
 
     def generator(self, x, is_training, reuse):
         with tf.variable_scope('generator', reuse=reuse):
