@@ -20,15 +20,12 @@ def pixalate_image(image, resize_dim = (96 , 96) , downsampling_mode = cv2.INTER
         return small_image
 
     resize_dim = (w,h)
-    if (downsampling_mode == None ):
-        low_res_image = cv2.resize(small_image, resize_dim )
-    else:
-        low_res_image = cv2.resize(small_image, resize_dim, interpolation = downsampling_mode )
+    low_res_image = cv2.resize(small_image, resize_dim )
 
     return low_res_image
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = (96 , 96) ,DownSamplingMode = cv2.INTER_AREA  ):
+def Data_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = (96 , 96) , DownSamplingMode = cv2.INTER_AREA):
     progress = tqdm(total= len(images_list), position=0)
     for i , filepath in enumerate(images_list):
         image = pyplot.imread(filepath) # read the image file and save into an array

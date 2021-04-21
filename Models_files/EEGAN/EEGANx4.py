@@ -1,8 +1,6 @@
 import tensorflow as tf
 import numpy as np
 import sys
-sys.path.append('../utils')
-sys.path.append('../vgg19')
 from layer import *
 from vgg19 import VGG19
 
@@ -11,7 +9,7 @@ class SRGAN:
         self.batch_size = batch_size
         self.vgg = VGG19(None, None, None)
         self.downscaled = self.downscale(x)
-        self.bic_ref = tf.image.resize_images(self.downscaled, [self.image_size*4, self.image_size*4], method=2)
+        self.bic_ref = tf.image.resize(self.downscaled, [self.image_size*4, self.image_size*4], method=2)
         self.frame_sr, self.base_sr, self.imitation_sr  = self.generator(self.downscaled, is_training, False)
         self.real_output = self.discriminator(x, is_training, False)
         self.fake_output = self.discriminator(self.base_sr, is_training, True)
