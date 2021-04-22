@@ -2,13 +2,13 @@ import tensorflow as tf
 import numpy as np
 import sys
 from layer import *
-from vgg19 import VGG19
+
 
 class SRGAN:
     def __init__(self, x, is_training, batch_size , image_size):
         self.image_size = image_size
         self.batch_size = batch_size
-        self.vgg = VGG19(None, None, None)
+        self.vgg = tf.keras.applications.VGG19(include_top=True, weights='imagenet' , input_shape = image_size )
         self.downscaled = self.downscale(x)
         self.bic_ref = tf.image.resize_images(self.downscaled, [self.image_size*4, self.image_size*4], method=2)
         self.frame_sr, self.base_sr, self.imitation_sr  = self.generator(self.downscaled, is_training, False)
