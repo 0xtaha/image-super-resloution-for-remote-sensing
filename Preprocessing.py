@@ -19,23 +19,25 @@ def start_points(size, split_size, overlap=0):
             counter += 1
         return points
 
-def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, overlap_y=0 , format='.png'):
+def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, overlap_y=0 , frmt='png'):
     """
     overlap --> 0 : 0.75
     """
     img = cv2.imread(path_to_img, cv2.IMREAD_COLOR)
-    img = np.array(img)
     img_h, img_w, _ = img.shape
     
     X_points = start_points(img_w, split_width, overlap_x)
     Y_points = start_points(img_h, split_height, overlap_y)
 
     count = 0
+    name = 'splitted'
+    frmt = format
+
     for i in Y_points:
         for j in X_points:
-            split = np.array(img[i:i+split_height, j:j+split_width])
-            name = "{}".format("{0:03d}".format(count))
-            pyplot.imsave(name + format , split)
+            split = img[i:i+split_height, j:j+split_width]
+            name = "{}".format("{0:03d}".format(i))
+            pyplot.imsave(os.path.join(savepath, name), split, format = frmt)
             count += 1
 
 def pixalate_image(image, resize_dim = (256 , 256) , downsampling_mode = cv2.INTER_AREA , same_size = True):
