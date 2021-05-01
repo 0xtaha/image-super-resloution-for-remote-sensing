@@ -5,8 +5,41 @@ import numpy as np
 import cv2
 from tqdm.notebook import tqdm, trange
 
+def start_points(size, split_size, overlap=0):
+        points = [0]
+        stride = int(split_size * (1-overlap))
+        counter = 1
+        while True:
+            pt = stride * counter
+            if pt + split_size >= size:
+                points.append(size - split_size)
+                break
+            else:
+                points.append(pt)
+            counter += 1
+        return points
 
-def pixalate_image(image, resize_dim = (100 , 100) , downsampling_mode = cv2.INTER_AREA , same_size = True):
+def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, overlap_y=0 , format='png'):
+    """
+    overlap --> 0 : 0.75
+    """
+    img = cv2.imread(path_to_img, cv2.IMREAD_COLOR)
+    img_h, img_w, _ = img.shape
+    
+    X_points = start_points(img_w, split_width, overlap_x)
+    Y_points = start_points(img_h, split_height, overlap_y)
+
+    count = 0
+    name = 'splitted'
+    frmt = format
+
+    for i in Y_points:
+        for j in X_points:
+            split = img[i:i+split_height, j:j+split_width]
+            cv2.imwrite(savepath, '{}_{}.{}'.format(name, count, frmt), split)
+            count += 1
+
+def pixalate_image(image, resize_dim = (256 , 256) , downsampling_mode = cv2.INTER_AREA , same_size = True):
 
     w,h,_ = image.shape
     
@@ -28,7 +61,7 @@ def pixalate_image(image, resize_dim = (100 , 100) , downsampling_mode = cv2.INT
 def Data_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = (100 , 100) , DownSamplingMode = cv2.INTER_AREA):
     progress = tqdm(total= len(images_list), position=0)
     for i , filepath in enumerate(images_list):
-        image = pyplot.imread(filepath) # read the image file and save into an array
+        image = cv2.imread(filepath ,cv2.IMREAD_COLOR) # read the image file and save into an array
         if len(image.shape) > 2:
           # Resize the image so that every image is the same size
           HighRes = resize(image, (256, 256))
