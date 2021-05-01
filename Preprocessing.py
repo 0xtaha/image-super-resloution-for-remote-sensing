@@ -3,7 +3,7 @@ from skimage.transform import resize
 from matplotlib import pyplot
 import numpy as np
 import cv2
-from tqdm.notebook import tqdm, trange
+from tqdm.notebook import tqdm
 
 def start_points(size, split_size, overlap=0):
         points = [0]
