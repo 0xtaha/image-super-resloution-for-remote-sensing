@@ -36,8 +36,7 @@ def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, 
     for i in Y_points:
         for j in X_points:
             split = img[i:i+split_height, j:j+split_width]
-            name = "{}".format("{0:03d}".format(i))
-            cv2.imwrite(os.path.join(savepath, name + format), split)
+            cv2.imwrite(os.path.join(savepath, count + format), split)
             count += 1
 
 def pixalate_image(image, resize_dim = (256 , 256) , downsampling_mode = cv2.INTER_AREA , same_size = True):
