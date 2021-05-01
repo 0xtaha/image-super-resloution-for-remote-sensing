@@ -30,8 +30,6 @@ def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, 
     Y_points = start_points(img_h, split_height, overlap_y)
 
     count = 0
-    name = 'splitted'
-    frmt = format
 
     for i in Y_points:
         for j in X_points:
