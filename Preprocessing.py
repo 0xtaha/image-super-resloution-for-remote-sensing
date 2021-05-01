@@ -23,7 +23,7 @@ def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, 
     """
     overlap --> 0 : 0.75
     """
-    img = cv2.imread(path_to_img, cv2.IMREAD_COLOR)
+    img = cv2.imread(path_to_img)
     img_h, img_w, _ = img.shape
     
     X_points = start_points(img_w, split_width, overlap_x)
