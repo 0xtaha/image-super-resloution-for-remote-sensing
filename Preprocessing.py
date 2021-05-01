@@ -33,7 +33,7 @@ def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, 
     count = 0
     for i in Y_points:
         for j in X_points:
-            split = img[i:i+split_height, j:j+split_width]
+            split = np.array(img[i:i+split_height, j:j+split_width])
             name = "{}".format("{0:03d}".format(count))
             cv2.imwrite(os.path.join(savepath, name + format), split)
             count += 1
