@@ -29,12 +29,12 @@ def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, 
     X_points = start_points(img_w, split_width, overlap_x)
     Y_points = start_points(img_h, split_height, overlap_y)
 
-    count = counter+1
+    count = counter
 
     for i in Y_points:
         for j in X_points:
             split = img[i:i+split_height, j:j+split_width]
-            name = "{}.{}".format("{0:06d}".format(count),frmt)
+            name = "{}.{}".format("{0:08d}".format(count),frmt)
             pyplot.imsave(os.path.join(savepath, name), split, format = frmt)
             count += 1
     return count
