@@ -84,7 +84,7 @@ def Data_Train_Preprocessing(images_list , Preprocessed_Data_Path , resize_dim =
         current_processed_images = images_list[begin : begin+10]
         begin +=10
         p = Pool(10)
-        p.starmap(image_preprocess, zip(current_processed_images , repeat( 'test' , Preprocessed_Data_Path  , resize_dim , DownSamplingMode = DownSamplingMode)))
+        p.starmap(image_preprocess, zip(current_processed_images , 'train' , Preprocessed_Data_Path  , resize_dim , DownSamplingMode))
         progress.update(10)
 
     print('Done ... ')
