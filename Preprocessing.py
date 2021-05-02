@@ -84,7 +84,7 @@ def Data_Train_Preprocessing(images_list , Preprocessed_Data_Path , resize_dim =
         current_processed_images = images_list[begin : begin+10]
         begin +=10
         p = Pool(10)
-        p.starmap(image_preprocess, product(current_processed_images, Preprocessed_Data_Path , resize_dim , DownSamplingMode ))
+        p.starmap(image_preprocess, product(current_processed_images, Preprocessed_Data_Path))
         progress.update(10)
 
     print('Done ... ')
@@ -98,7 +98,7 @@ def Data_Test_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_d
         current_processed_images = images_list[begin : begin+10]
         begin +=10
         p = Pool(10)
-        p.starmap(image_preprocess, product(current_processed_images, Preprocessed_Data_Path , resize_dim , DownSamplingMode ))
+        p.starmap(image_preprocess, product(current_processed_images, Preprocessed_Data_Path ))
         progress.update(10)
 
     print('Done ... ')                          
