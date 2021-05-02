@@ -85,7 +85,11 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim 
     progress = tqdm(total= len(images_list), position=0)
     list_lenght = len(images_list)
     begin = 0
-    pr , pa , re , do = []
+    
+    pr = []
+    pa = []
+    re = []
+    do = []
 
     for i in range(10):
         pr.append(Preprocessed_Data_Path)
