@@ -75,8 +75,8 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , resize_dim = (25
         else:
             LowRes = pixalate_image(HighRes , resize_dim , downsampling_mode = None)
 
-        i = os.path.splitext(filepath)[0]
-        name = "{}".format("{0:08d}".format(i))
+        
+        name = print((os.path.split(filepath)[1]).split('.')[0])
         np.save(os.path.join(Preprocessed_Data_Path, path+'_y', name + '.npy'), HighRes)
         np.save(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.npy'), LowRes)
 
