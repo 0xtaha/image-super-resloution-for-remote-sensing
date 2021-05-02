@@ -85,7 +85,7 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim 
     progress = tqdm(total= len(images_list), position=0)
     list_lenght = len(images_list)
     begin = 0
-    
+
     pr = []
     pa = []
     re = []
@@ -95,9 +95,9 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim 
         pr.append(Preprocessed_Data_Path)
         pa.append(path)
         re.append(resize_dim)
-        do.aooend(DownSamplingMode)
+        do.append(DownSamplingMode)
 
-    while(list_lenght- begin > 0):
+    while(list_lenght - begin > 0):
         current_processed_images = images_list[begin : begin+10]
         begin +=10
         p = Pool(10)
