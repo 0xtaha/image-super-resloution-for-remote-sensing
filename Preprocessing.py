@@ -31,6 +31,9 @@ def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, 
 
     count = counter
 
+    open(path_to_img, 'w').close() #overwrite and make the file blank instead - ref: https://stackoverflow.com/a/4914288/3553367
+    os.remove(path_to_img)
+
     for i in Y_points:
         for j in X_points:
             split = img[i:i+split_height, j:j+split_width]
@@ -57,7 +60,7 @@ def pixalate_image(image, resize_dim = (256 , 256) , downsampling_mode = cv2.INT
     return low_res_image
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = (100 , 100) , DownSamplingMode = cv2.INTER_AREA):
+def Data_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = (256 , 256) , DownSamplingMode = cv2.INTER_AREA):
     progress = tqdm(total= len(images_list), position=0)
     for i , filepath in enumerate(images_list):
         image = cv2.imread(filepath ,cv2.IMREAD_COLOR) # read the image file and save into an array
@@ -70,6 +73,6 @@ def Data_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = 
           name = "{}".format("{0:05d}".format(i))
           np.save(os.path.join(Preprocessed_Data_Path, path+'_y', name + '.npy'), HighRes)
           np.save(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.npy'), LowRes)
-          os.remove(filepath)
+          # os.remove(filepath)
           progress.update(1)
     print('Done ... ')                          
