@@ -5,7 +5,8 @@ import numpy as np
 import cv2
 from tqdm.notebook import tqdm
 from multiprocessing import Pool
-from itertools import product
+from functools import partial
+
 
 def start_points(size, split_size, overlap=0):
         points = [0]
@@ -78,13 +79,13 @@ def image_preprocess(path, filepath, Preprocessed_Data_Path , DownSamplingMode, 
 def Data_Train_Preprocessing(images_list , Preprocessed_Data_Path , resize_dim = (256 , 256) , DownSamplingMode = cv2.INTER_AREA):
     progress = tqdm(total= len(images_list), position=0)
     list_lenght = len(images_list)
-    # pool_images_preprocessing = partial(image_preprocess, path = 'train' , Preprocessed_Data_Path = Preprocessed_Data_Path , resize_dim = resize_dim , DownSamplingMode = DownSamplingMode)
+    pool_images_preprocessing = partial(image_preprocess, path = 'train' , Preprocessed_Data_Path = Preprocessed_Data_Path , resize_dim = resize_dim , DownSamplingMode = DownSamplingMode)
     begin = 0
     while(list_lenght- begin > 0):
         current_processed_images = images_list[begin : begin+10]
         begin +=10
         p = Pool(10)
-        p.starmap(image_preprocess, product(current_processed_images, Preprocessed_Data_Path))
+        p.map(pool_images_preprocessing, current_processed_images)
         progress.update(10)
 
     print('Done ... ')
@@ -92,13 +93,13 @@ def Data_Train_Preprocessing(images_list , Preprocessed_Data_Path , resize_dim =
 def Data_Test_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = (256 , 256) , DownSamplingMode = cv2.INTER_AREA):
     progress = tqdm(total= len(images_list), position=0)
     list_lenght = len(images_list)
-    # pool_images_preprocessing = partial(image_preprocess, path = path , Preprocessed_Data_Path = Preprocessed_Data_Path , resize_dim = resize_dim , DownSamplingMode = DownSamplingMode)
+    pool_images_preprocessing = partial(image_preprocess, path = 'test' , Preprocessed_Data_Path = Preprocessed_Data_Path , resize_dim = resize_dim , DownSamplingMode = DownSamplingMode)
     begin = 0
     while(list_lenght- begin > 0):
         current_processed_images = images_list[begin : begin+10]
         begin +=10
         p = Pool(10)
-        p.starmap(image_preprocess, product(current_processed_images, Preprocessed_Data_Path ))
+        p.map(pool_images_preprocessing, current_processed_images)
         progress.update(10)
 
     print('Done ... ')                          
