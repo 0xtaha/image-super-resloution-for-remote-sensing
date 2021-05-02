@@ -62,42 +62,42 @@ def pixalate_image(image, resize_dim = (256 , 256) , downsampling_mode = cv2.INT
 
     return low_res_image
 
-def image_preprocess(filepath , path , Preprocessed_Data_Path , resize_dim , DownSamplingMode ):
+def image_preprocess(filepath , Preprocessed_Data_Path , path , resize_dim = (256 , 256) , DownSamplingMode = 'INTER_AREA'):
     image = cv2.imread(filepath ,cv2.IMREAD_COLOR) # read the image file and save into an array
     if len(image.shape) > 2:
         # Resize the image so that every image is the same size
         HighRes = resize(image, (256, 256))
         # Add this image to the high res dataset
         # Rescale it 0.5x and 2x so that it is a low res image but still has 256x256 resolution
-        LowRes = pixalate_image(HighRes , resize_dim , downsampling_mode = DownSamplingMode)
+        if (DownSamplingMode == 'INTER_AREA'):
+
+            LowRes = pixalate_image(HighRes , resize_dim , downsampling_mode = cv2.INTER_AREA)
+        else:
+            LowRes = pixalate_image(HighRes , resize_dim , downsampling_mode = None)
+
         i = os.path.splitext(filepath)[0]
         name = "{}".format("{0:08d}".format(i))
         np.save(os.path.join(Preprocessed_Data_Path, path+'_y', name + '.npy'), HighRes)
         np.save(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.npy'), LowRes)
 
 ## Progress bar is to be added
-def Data_Train_Preprocessing(images_list , Preprocessed_Data_Path , resize_dim = (256 , 256) , DownSamplingMode = cv2.INTER_AREA):
+def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim = (256 , 256) , DownSamplingMode = 'INTER_AREA'):
     progress = tqdm(total= len(images_list), position=0)
     list_lenght = len(images_list)
     begin = 0
-    while(list_lenght- begin > 0):
-        current_processed_images = images_list[begin : begin+9]
-        begin +=10
-        p = Pool(10)
-        p.starmap(image_preprocess, zip(current_processed_images , repeat( ('train' , Preprocessed_Data_Path  , resize_dim , DownSamplingMode) , 9)))
-        progress.update(10)
+    pr , pa , re , do = []
 
-    print('Done ... ')
+    for i in range(10):
+        pr.append(Preprocessed_Data_Path)
+        pa.append(path)
+        re.append(resize_dim)
+        do.aooend(DownSamplingMode)
 
-def Data_Test_Preprocessing(images_list ,path, Preprocessed_Data_Path , resize_dim = (256 , 256) , DownSamplingMode = cv2.INTER_AREA):
-    progress = tqdm(total= len(images_list), position=0)
-    list_lenght = len(images_list)
-    begin = 0
     while(list_lenght- begin > 0):
         current_processed_images = images_list[begin : begin+10]
         begin +=10
         p = Pool(10)
-        p.starmap(image_preprocess, zip(current_processed_images , repeat( 'test' , Preprocessed_Data_Path  , resize_dim , DownSamplingMode = DownSamplingMode)))
+        p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , re , do))
         progress.update(10)
 
-    print('Done ... ')                          
+    print('Done ... ')
