@@ -81,10 +81,12 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , resize_dim = (25
         np.save(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.npy'), LowRes)
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim = (256 , 256) , DownSamplingMode = 'INTER_AREA'):
+def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim = (256 , 256) , DownSamplingMode = 'INTER_AREA' , number_of_threads = 5):
     progress = tqdm(total= len(images_list), position=0)
     list_lenght = len(images_list)
     begin = 0
+    
+    p = Pool(number_of_threads)
 
     pr = []
     pa = []
@@ -96,11 +98,10 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim 
         pa.append(path)
         re.append(resize_dim)
         do.append(DownSamplingMode)
-
+    
     while(list_lenght - begin > 0):
-        current_processed_images = images_list[begin : begin+10]
-        begin +=10
-        p = Pool(10)
+        current_processed_images = images_list[begin : begin+number_of_threads]
+        begin +=number_of_threads
         p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , re , do))
         progress.update(10)
 
