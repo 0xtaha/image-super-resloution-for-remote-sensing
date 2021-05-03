@@ -56,11 +56,12 @@ class DataGenerator(keras.utils.Sequence):
 
         p = Pool(self.batch_size)
 
-        temp_X_imgs = np.empty((self.batch_size, *self.dim, self.n_channels))
-        temp_y_imgs = np.empty((self.batch_size, *self.dim, self.n_channels))
 
         # Generate data
         for i in range (len(list_x_temp)):
+            
+            temp_X_imgs = []
+            temp_y_imgs = []
 
             # Store sample
             temp_X_imgs[i] = np.load(list_x_temp[i])
