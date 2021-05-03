@@ -98,5 +98,4 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim 
         begin +=number_of_threads
         p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , re , do))
         progress.update(number_of_threads)
-
     print('Done ... ')

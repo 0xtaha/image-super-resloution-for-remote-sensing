@@ -44,7 +44,8 @@ class DataGenerator(keras.utils.Sequence):
         if self.shuffle == True:
             np.random.shuffle(self.indexes)
     
-    def process_image(dim ,img):
+    def process_image(path , dim):
+        img = np.load(path)
         image = cv2.resize(dim,img)
         return image
 
@@ -56,11 +57,8 @@ class DataGenerator(keras.utils.Sequence):
 
         p = Pool(self.batch_size)
 
-        temp_X = p.map(np.load, list_x_temp)
-        temp_y = p.map(np.load, list_y_temp)
-
-        temp_X_imgs = p.map(self.process_image , zip( temp_X , (repeat(self.X_dim))))
-        temp_y_imgs = p.map(self.process_image , zip( temp_y , (repeat(self.Y_dim))))
+        temp_X_imgs = p.map(self.process_image , zip( list_x_temp , (repeat(self.X_dim))))
+        temp_y_imgs = p.map(self.process_image , zip( list_y_temp , (repeat(self.Y_dim))))
 
         X = np.array(temp_X_imgs)
         y = np.array(temp_y_imgs)
