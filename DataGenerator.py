@@ -7,7 +7,7 @@ import cv2
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
     def __init__(self, list_x , list_y, labels, batch_size=32, X_dim=(256,256), Y_dim=(256,256) , n_channels=3,
-                 n_classes=10, shuffle=True):
+                shuffle=True):
         'Initialization'
         self.X_dim = X_dim
         self.Y_dim = Y_dim
@@ -16,7 +16,6 @@ class DataGenerator(keras.utils.Sequence):
         self.list_x = list_x
         self.list_y = list_y
         self.n_channels = n_channels
-        self.n_classes = n_classes
         self.shuffle = shuffle
         self.on_epoch_end()
 
