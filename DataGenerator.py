@@ -46,7 +46,7 @@ class DataGenerator(keras.utils.Sequence):
             np.random.shuffle(self.indexes)
     
     def process_image(img , dim):
-        image = cv2.resize(dim,img)
+        image = cv2.resize(dim,np.float(img))
         return image
 
     def __data_generation(self, list_x_temp, list_y_temp):
@@ -61,7 +61,7 @@ class DataGenerator(keras.utils.Sequence):
 
         # Generate data
         for i in range (len(list_x_temp)):
-            
+
             # Store sample
             temp_X_imgs.append(np.load(list_x_temp[i]))
 
