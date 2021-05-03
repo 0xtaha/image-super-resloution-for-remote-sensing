@@ -44,8 +44,7 @@ class DataGenerator(keras.utils.Sequence):
         if self.shuffle == True:
             np.random.shuffle(self.indexes)
     
-    def process_image(path , dim):
-        img = np.load(path)
+    def process_image(img , dim):
         image = cv2.resize(dim,img)
         return image
 
