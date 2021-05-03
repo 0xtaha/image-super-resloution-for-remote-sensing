@@ -1,11 +1,13 @@
 import keras
 import numpy as np
+from multiprocessing import Pool, pool
+from itertools import repeat
 
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
     def __init__(self, list_x , list_y, labels, batch_size=32, dim = (256,256), n_channels=3,
-                shuffle=True):
+                shuffle=True , p = Pool(10)):
         'Initialization'
         self.dim = dim
         self.batch_size = batch_size
@@ -14,6 +16,7 @@ class DataGenerator(keras.utils.Sequence):
         self.list_y = list_y
         self.n_channels = n_channels
         self.shuffle = shuffle
+        self.p = p
         self.on_epoch_end()
 
     def __len__(self):
@@ -32,6 +35,7 @@ class DataGenerator(keras.utils.Sequence):
         # Generate data
         X, y = self.__data_generation(list_x_temp , list_y_temp)
 
+
         return X, y
 
     def on_epoch_end(self):
@@ -44,16 +48,16 @@ class DataGenerator(keras.utils.Sequence):
     def __data_generation(self, list_x_temp, list_y_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
-        X = np.empty((self.batch_size, *self.dim, self.n_channels))
-        y = np.empty((self.batch_size, *self.dim, self.n_channels))
+        # X = np.empty((self.batch_size, *self.dim, self.n_channels))
+        # y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
+        tmp_X = self.p.map(np.load, list_x_temp)
+        tmp_y = self.p.map(np.load, list_y_temp)
+
+        X = np.array(tmp_X)
+        y = np.array(tmp_y)
+        
         # Generate data
-        for i in range (len(list_x_temp)):
-
-        #     # Store sample
-            X[i] = np.load(list_x_temp[i])
-
-        #     # Store class
-            y[i] = np.load(list_y_temp[i])
+        
         return X, y
         
