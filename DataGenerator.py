@@ -1,18 +1,13 @@
 import keras
 import numpy as np
-from multiprocessing import Pool
-from itertools import repeat
-import cv2
-from numpy.lib.function_base import append
+
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
-    def __init__(self, list_x , list_y, labels, batch_size=32, dim = (256,256), X_dim=(256,256), Y_dim=(256,256) , n_channels=3,
+    def __init__(self, list_x , list_y, labels, batch_size=32, dim = (256,256), n_channels=3,
                 shuffle=True):
         'Initialization'
         self.dim = dim
-        self.X_dim = X_dim
-        self.Y_dim = Y_dim
         self.batch_size = batch_size
         self.labels = labels
         self.list_x = list_x
@@ -45,40 +40,20 @@ class DataGenerator(keras.utils.Sequence):
         if self.shuffle == True:
             np.random.shuffle(self.indexes)
     
-    def process_image(img , dim):
-        image = cv2.resize(dim,np.float32(img))
-        return image
 
     def __data_generation(self, list_x_temp, list_y_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
-        # X = np.empty((self.batch_size, *self.dim, self.n_channels))
-        # y = np.empty((self.batch_size, *self.dim, self.n_channels))
-
-        p = Pool(self.batch_size)
-        temp_X_imgs = []
-        temp_y_imgs = []
+        X = np.empty((self.batch_size, *self.dim, self.n_channels))
+        y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
         # Generate data
         for i in range (len(list_x_temp)):
 
-            # Store sample
-            temp_X_imgs.append(np.load(list_x_temp[i]))
-
-            # Store outout
-            temp_y_imgs.append(np.load(list_y_temp[i]))
-
-        X = np.array(p.map(self.process_image , zip( temp_X_imgs , (repeat(self.X_dim)))))
-        y = np.array(p.map(self.process_image , zip( temp_y_imgs , (repeat(self.Y_dim)))))
-
-        
-        # Generate data
-        # for i in range (len(list_x_temp)):
-
         #     # Store sample
-        #     X[i] = np.load(list_x_temp[i])
+            X[i] = np.load(list_x_temp[i])
 
         #     # Store class
-        #     y[i] = np.load(list_y_temp[i])
+            y[i] = np.load(list_y_temp[i])
         return X, y
         
