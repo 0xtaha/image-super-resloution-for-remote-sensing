@@ -6,9 +6,10 @@ import cv2
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
-    def __init__(self, list_x , list_y, labels, batch_size=32, X_dim=(256,256), Y_dim=(256,256) , n_channels=3,
+    def __init__(self, list_x , list_y, labels, batch_size=32, dim = (256,256), X_dim=(256,256), Y_dim=(256,256) , n_channels=3,
                 shuffle=True):
         'Initialization'
+        self.dim = dim
         self.X_dim = X_dim
         self.Y_dim = Y_dim
         self.batch_size = batch_size
@@ -56,11 +57,20 @@ class DataGenerator(keras.utils.Sequence):
 
         p = Pool(self.batch_size)
 
-        temp_X_imgs = p.map(self.process_image , zip( list_x_temp , (repeat(self.X_dim))))
-        temp_y_imgs = p.map(self.process_image , zip( list_y_temp , (repeat(self.Y_dim))))
+        temp_X_imgs = np.empty((self.batch_size, *self.dim, self.n_channels))
+        temp_y_imgs = np.empty((self.batch_size, *self.dim, self.n_channels))
 
-        X = np.array(temp_X_imgs)
-        y = np.array(temp_y_imgs)
+        # Generate data
+        for i in range (len(list_x_temp)):
+
+            # Store sample
+            temp_X_imgs[i] = np.load(list_x_temp[i])
+
+            # Store outout
+            temp_y_imgs[i] = np.load(list_y_temp[i])
+
+        X = np.array(p.map(self.process_image , zip( temp_X_imgs , (repeat(self.X_dim)))))
+        y = np.array(p.map(self.process_image , zip( temp_y_imgs , (repeat(self.Y_dim)))))
 
         
         # Generate data
