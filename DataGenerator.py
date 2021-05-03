@@ -3,6 +3,7 @@ import numpy as np
 from multiprocessing import Pool
 from itertools import repeat
 import cv2
+from numpy.lib.function_base import append
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
@@ -55,19 +56,17 @@ class DataGenerator(keras.utils.Sequence):
         # y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
         p = Pool(self.batch_size)
-
+        temp_X_imgs = []
+        temp_y_imgs = []
 
         # Generate data
         for i in range (len(list_x_temp)):
             
-            temp_X_imgs = []
-            temp_y_imgs = []
-
             # Store sample
-            temp_X_imgs[i] = np.load(list_x_temp[i])
+            temp_X_imgs.append(np.load(list_x_temp[i]))
 
             # Store outout
-            temp_y_imgs[i] = np.load(list_y_temp[i])
+            temp_y_imgs.append(np.load(list_y_temp[i]))
 
         X = np.array(p.map(self.process_image , zip( temp_X_imgs , (repeat(self.X_dim)))))
         y = np.array(p.map(self.process_image , zip( temp_y_imgs , (repeat(self.Y_dim)))))
