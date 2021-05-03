@@ -70,7 +70,6 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , resize_dim = (25
         # Add this image to the high res dataset
         # Rescale it 0.5x and 2x so that it is a low res image but still has 256x256 resolution
         if (DownSamplingMode == 'INTER_AREA'):
-
             LowRes = pixalate_image(HighRes , resize_dim , downsampling_mode = cv2.INTER_AREA)
         else:
             LowRes = pixalate_image(HighRes , resize_dim , downsampling_mode = None)
@@ -88,16 +87,11 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , resize_dim 
 
     p = Pool(number_of_threads)
 
-    pr = []
-    pa = []
-    re = []
-    do = []
+    pr = repeat(Preprocessed_Data_Path , number_of_threads)
+    pa = repeat(path, number_of_threads)
+    re = repeat(resize_dim, number_of_threads)
+    do = repeat(DownSamplingMode, number_of_threads)
 
-    for i in range(number_of_threads):
-        pr.append(Preprocessed_Data_Path)
-        pa.append(path)
-        re.append(resize_dim)
-        do.append(DownSamplingMode)
     
     while(list_len > begin):
         current_processed_images = images_list[begin : begin+number_of_threads]
