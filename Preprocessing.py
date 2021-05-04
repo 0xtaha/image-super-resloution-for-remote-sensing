@@ -50,36 +50,33 @@ def pixalate_image(image, pixelation_scale = 0.5 , downsampling_mode = cv2.INTER
 
     w,h,_ = image.shape
     resize_dim = (int(w*pixelation_scale) , int(h*pixelation_scale))
-    
-    if (downsampling_mode == None ):
-        small_image = cv2.resize(image, resize_dim )
-    elif (downsampling_mode == 'INTER_AREA'):
-        small_image = cv2.resize(image, resize_dim, interpolation = cv2.INTER_AREA )
+    small_image = cv2.resize(image, resize_dim, interpolation = cv2.INTER_AREA )
     
     # scale back to original size
     if (same_size == False) :
         return small_image
 
     resize_dim = (w,h)
-    low_res_image = cv2.resize(small_image, resize_dim )
 
+    low_res_image = cv2.resize(small_image, resize_dim )
     return low_res_image
 
-def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale = 0.5 , DownSamplingMode = 'INTER_AREA'):
+def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale = 0.5):
     image = cv2.imread(filepath ,cv2.IMREAD_COLOR) # read the image file and save into an array
     if len(image.shape) > 2:
         # Resize the image so that every image is the same size
         HighRes = resize(image, (256, 256))
         # Add this image to the high res dataset
         # Rescale it 0.5x and 2x so that it is a low res image but still has 256x256 resolution
-        LowRes = pixalate_image(HighRes , pixelation_scale = pixelation_scale , downsampling_mode = DownSamplingMode)
+        LowRes = pixalate_image(HighRes , pixelation_scale = pixelation_scale)
         
         name = (os.path.split(filepath)[1]).split('.')[0]
-        cv2.imwrite(os.path.join(Preprocessed_Data_Path, path+'_y', name + '.png'), HighRes)
-        cv2.imwrite(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.png'), LowRes)
+        
+        pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_y', name), HighRes , format = 'png')
+        pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_X', name), LowRes , format = 'png')
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , DownSamplingMode = 'INTER_AREA' , number_of_threads = 50):
+def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , DownSamplingMode = 'INTER_AREA' , number_of_threads = 5):
     progress = tqdm(total= len(images_list), position=0)
     list_len = len(images_list)
     begin = 0
