@@ -1,4 +1,5 @@
 import keras
+from matplotlib import pyplot
 import numpy as np
 from multiprocessing import Pool
 import cv2
@@ -7,10 +8,11 @@ from itertools import repeat
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
-    def __init__(self, list_x , list_y, labels, batch_size=32, dim = (256,256), n_channels=3,
+    def __init__(self, list_x , list_y, labels, batch_size=32, X_dim = (256,256),y_dim = (256,256) , n_channels=3,
                 shuffle=True , p = Pool(10)):
         'Initialization'
-        self.dim = dim
+        self.X_dim = X_dim
+        self.y_dim = y_dim
         self.batch_size = batch_size
         self.labels = labels
         self.list_x = list_x
@@ -34,7 +36,13 @@ class DataGenerator(keras.utils.Sequence):
         list_y_temp = [self.list_y[k] for k in indexes]
 
         # Generate data
-        X, y = self.__data_generation(list_x_temp , list_y_temp)
+        X_temp, y_temp = self.__data_generation(list_x_temp , list_y_temp)
+        
+        X = self.p.starmap(cv2.resize , zip(X_temp , repeat(self.X_dim , self.batch_size)))
+        y = self.p.starmap(cv2.resize , zip(y_temp , repeat(self.y_dim , self.batch_size)))
+
+        X = np.array(X)
+        y = np.array(y)
 
 
         return X, y
@@ -52,11 +60,9 @@ class DataGenerator(keras.utils.Sequence):
         # X = np.empty((self.batch_size, *self.dim, self.n_channels))
         # y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
-        tmp_X = self.p.map(cv2.imread, list_x_temp)
-        tmp_y = self.p.map(cv2.imread, list_y_temp)
+        X = self.p.map(pyplot.imread, list_x_temp)
+        y = self.p.map(pyplot.imread, list_y_temp)
 
-        X = np.array(tmp_X)
-        y = np.array(tmp_y)
         
         # Generate data
         

@@ -89,9 +89,6 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_
 
     p.starmap(image_preprocess, zip(images_list, pr , pa  , pi))
 
-
-
-    
     # while(list_len > begin):
     #     current_processed_images = images_list[begin : begin+number_of_threads]
     #     begin +=number_of_threads
