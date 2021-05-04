@@ -1,6 +1,7 @@
 import keras
 import numpy as np
-from multiprocessing import Pool, pool
+from multiprocessing import Pool
+import cv2
 from itertools import repeat
 
 
@@ -51,8 +52,8 @@ class DataGenerator(keras.utils.Sequence):
         # X = np.empty((self.batch_size, *self.dim, self.n_channels))
         # y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
-        tmp_X = self.p.map(np.load, list_x_temp)
-        tmp_y = self.p.map(np.load, list_y_temp)
+        tmp_X = self.p.map(cv2.imread, list_x_temp)
+        tmp_y = self.p.map(cv2.imread, list_y_temp)
 
         X = np.array(tmp_X)
         y = np.array(tmp_y)
