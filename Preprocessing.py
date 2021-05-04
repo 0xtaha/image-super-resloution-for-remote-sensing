@@ -79,7 +79,7 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale
         cv2.imwrite(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.png'), LowRes)
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , DownSamplingMode = 'INTER_AREA' , number_of_threads = 10):
+def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , DownSamplingMode = 'INTER_AREA' , number_of_threads = 50):
     progress = tqdm(total= len(images_list), position=0)
     list_len = len(images_list)
     begin = 0
