@@ -72,8 +72,8 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale
         
         name = (os.path.split(filepath)[1]).split('.')[0]
         
-        cv2.imwrite(os.path.join(Preprocessed_Data_Path, path+'_y', name + '.png'), HighRes)
-        cv2.imwrite(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.png'), LowRes)
+        pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_y', name + '.png'), HighRes)
+        pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.png'), LowRes)
 
 ## Progress bar is to be added
 def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , number_of_threads = 5):
