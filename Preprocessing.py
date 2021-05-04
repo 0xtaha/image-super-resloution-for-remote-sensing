@@ -77,10 +77,7 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale
 
 ## Progress bar is to be added
 def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5):
-    progress = tqdm(total= len(images_list), position=0)
     list_len = len(images_list)
-    begin = 0
-
     p = Pool(10)
 
     pr = repeat(Preprocessed_Data_Path , list_len)
