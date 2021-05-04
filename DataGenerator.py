@@ -54,8 +54,11 @@ class DataGenerator(keras.utils.Sequence):
         # X = np.empty((self.batch_size, *self.dim, self.n_channels))
         # y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
-        X = np.array(self.p.map(cv2.imread, list_x_temp) , dtype= np.float32  )
-        y = np.array(self.p.map(cv2.imread, list_y_temp) , dtype= np.float32  )
+        X = np.array(self.p.map(pyplot.imread, list_x_temp))
+        y = np.array(self.p.map(pyplot.imread, list_y_temp))
+
+        X = X[:,:,:,:3]
+        y = y[:,:,:,:3]
 
         
         # Generate data
