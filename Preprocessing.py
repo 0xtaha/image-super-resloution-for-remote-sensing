@@ -76,23 +76,27 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale
         pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.png'), LowRes)
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , number_of_threads = 5):
+def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5):
     progress = tqdm(total= len(images_list), position=0)
     list_len = len(images_list)
     begin = 0
 
-    p = Pool(number_of_threads)
+    p = Pool(10)
 
-    pr = repeat(Preprocessed_Data_Path , number_of_threads)
-    pa = repeat(path, number_of_threads)
-    pi = repeat(pixelation_scale, number_of_threads)
+    pr = repeat(Preprocessed_Data_Path , list_len)
+    pa = repeat(path, list_len)
+    pi = repeat(pixelation_scale, list_len)
+
+    p.starmap(image_preprocess, zip(images_list, pr , pa  , pi))
+
+
 
     
-    while(list_len > begin):
-        current_processed_images = images_list[begin : begin+number_of_threads]
-        begin +=number_of_threads
-        for image in current_processed_images:
-            image_preprocess(image , Preprocessed_Data_Path , path , pixelation_scale )
-        # p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , pi))
-        progress.update(number_of_threads)
+    # while(list_len > begin):
+    #     current_processed_images = images_list[begin : begin+number_of_threads]
+    #     begin +=number_of_threads
+    #     for image in current_processed_images:
+    #         image_preprocess(image , Preprocessed_Data_Path , path , pixelation_scale )
+    #     # p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , pi))
+    #     progress.update(number_of_threads)
     print('Done ... ')
