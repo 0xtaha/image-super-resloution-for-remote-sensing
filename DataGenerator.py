@@ -36,14 +36,8 @@ class DataGenerator(keras.utils.Sequence):
         list_y_temp = [self.list_y[k] for k in indexes]
 
         # Generate data
-        X_temp, y_temp = self.__data_generation(list_x_temp , list_y_temp)
+        X, y = self.__data_generation(list_x_temp , list_y_temp)
         
-        X = self.p.starmap(cv2.resize , zip(X_temp , repeat(self.X_dim , self.batch_size)))
-        y = self.p.starmap(cv2.resize , zip(y_temp , repeat(self.y_dim , self.batch_size)))
-
-        X = np.array(X)
-        y = np.array(y)
-
 
         return X, y
 
@@ -60,8 +54,8 @@ class DataGenerator(keras.utils.Sequence):
         # X = np.empty((self.batch_size, *self.dim, self.n_channels))
         # y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
-        X = self.p.map(pyplot.imread, list_x_temp)
-        y = self.p.map(pyplot.imread, list_y_temp)
+        X = np.array(self.p.map(pyplot.imread, list_x_temp))
+        y = np.array(self.p.map(pyplot.imread, list_y_temp))
 
         
         # Generate data
