@@ -46,7 +46,7 @@ def image_split(path_to_img, savepath ,split_width, split_height , overlap_x=0, 
     return count
 
 
-def pixalate_image(image, pixelation_scale = 0.5 , downsampling_mode = cv2.INTER_AREA , same_size = True):
+def pixalate_image(image, pixelation_scale = 0.5 , same_size = True):
 
     w,h,_ = image.shape
     resize_dim = (int(w*pixelation_scale) , int(h*pixelation_scale))
@@ -72,11 +72,11 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale
         
         name = (os.path.split(filepath)[1]).split('.')[0]
         
-        pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_y', name), HighRes , format = 'png')
-        pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_X', name), LowRes , format = 'png')
+        cv2.imwrite(os.path.join(Preprocessed_Data_Path, path+'_y', name + '.png'), HighRes)
+        cv2.imwrite(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.png'), LowRes)
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , DownSamplingMode = 'INTER_AREA' , number_of_threads = 5):
+def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5  , number_of_threads = 5):
     progress = tqdm(total= len(images_list), position=0)
     list_len = len(images_list)
     begin = 0
@@ -86,12 +86,11 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_
     pr = repeat(Preprocessed_Data_Path , number_of_threads)
     pa = repeat(path, number_of_threads)
     pi = repeat(pixelation_scale, number_of_threads)
-    do = repeat(DownSamplingMode, number_of_threads)
 
     
     while(list_len > begin):
         current_processed_images = images_list[begin : begin+number_of_threads]
         begin +=number_of_threads
-        p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , pi , do))
+        p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , pi))
         progress.update(number_of_threads)
     print('Done ... ')
