@@ -65,9 +65,8 @@ class DataGenerator(keras.utils.Sequence):
         X_temp = self.p.map(ImgToArr, X_temp)
         y_temp = self.p.map(ImgToArr, y_temp)
         
-
-
-        
+        X = np.array(X_temp)
+        y = np.array(y_temp)
         # Generate data
         
         return X, y
