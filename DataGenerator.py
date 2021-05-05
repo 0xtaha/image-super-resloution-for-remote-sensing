@@ -1,10 +1,14 @@
 import keras
-from matplotlib import pyplot
 import numpy as np
 from multiprocessing import Pool
-import cv2
-from itertools import repeat
+from PIL import Image
 
+
+def ImgToArr(image):
+        image = image.convert("RGB")
+        image = np.asarray(image, dtype=np.float32) / 255
+        image = image[:,:,:3]
+        return image
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
@@ -47,6 +51,7 @@ class DataGenerator(keras.utils.Sequence):
         if self.shuffle == True:
             np.random.shuffle(self.indexes)
     
+    
 
     def __data_generation(self, list_x_temp, list_y_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
@@ -54,11 +59,13 @@ class DataGenerator(keras.utils.Sequence):
         # X = np.empty((self.batch_size, *self.dim, self.n_channels))
         # y = np.empty((self.batch_size, *self.dim, self.n_channels))
 
-        X = np.array(self.p.map(pyplot.imread, list_x_temp))
-        y = np.array(self.p.map(pyplot.imread, list_y_temp))
+        X_temp = self.p.map(Image.open, list_x_temp)
+        y_temp = self.p.map(Image.open, list_y_temp)
 
-        X = X[:,:,:,:3]
-        y = y[:,:,:,:3]
+        X_temp = self.p.map(ImgToArr, X_temp)
+        y_temp = self.p.map(ImgToArr, y_temp)
+        
+
 
         
         # Generate data

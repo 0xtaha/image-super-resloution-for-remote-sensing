@@ -6,6 +6,8 @@ import cv2
 from tqdm.notebook import tqdm
 from multiprocessing import Pool
 from itertools import repeat
+from PIL import Image
+
 
 
 def start_points(size, split_size, overlap=0):
@@ -94,3 +96,24 @@ def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_
     #     # p.starmap(image_preprocess, zip(current_processed_images , pr , pa  , pi))
     #     progress.update(number_of_threads)
     print('Done ... ')
+
+
+def check_img(index):
+  try:
+    im1=Image.open(x_train_list[index])
+    im2=Image.open(y_train_list[index])
+  except IOError:
+    print(index)
+    f1 = open(x_train_list[index],'w')
+    f1.write('')
+    f1.close()
+    os.remove(x_train_list[index])
+    f1 = open(y_train_list[index],'w')
+    f1.write('')
+    f1.close()
+    os.remove(y_train_list[index])
+
+
+p = Pool(10)
+
+p.map(check_img,val_gen.indexes )
