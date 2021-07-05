@@ -78,15 +78,18 @@ def image_preprocess(filepath , Preprocessed_Data_Path , path , pixelation_scale
         pyplot.imsave(os.path.join(Preprocessed_Data_Path, path+'_x',name + '.png'), LowRes)
 
 ## Progress bar is to be added
-def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5):
+def Data_Preprocessing(images_list , Preprocessed_Data_Path , path , pixelation_scale = 0.5 , multithreading = False):
     list_len = len(images_list)
-    p = Pool(10)
 
-    pr = repeat(Preprocessed_Data_Path , list_len)
-    pa = repeat(path, list_len)
-    pi = repeat(pixelation_scale, list_len)
-
-    p.starmap(image_preprocess, zip(images_list, pr , pa  , pi))
+    if (multithreading):
+        p = Pool(10)
+        pr = repeat(Preprocessed_Data_Path , list_len)
+        pa = repeat(path, list_len)
+        pi = repeat(pixelation_scale, list_len)
+        p.starmap(image_preprocess, zip(images_list, pr , pa  , pi))
+    else:
+        for imgpath in images_list:
+            image_preprocess(imgpath, Preprocessed_Data_Path, path , pixelation_scale)
 
     # while(list_len > begin):
     #     current_processed_images = images_list[begin : begin+number_of_threads]
