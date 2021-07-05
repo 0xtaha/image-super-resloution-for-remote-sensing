@@ -114,6 +114,6 @@ def check_img(index):
     os.remove(y_train_list[index])
 
 
-p = Pool(10)
+# p = Pool(10)
 
-p.map(check_img,val_gen.indexes )
+# p.map(check_img,val_gen.indexes )
